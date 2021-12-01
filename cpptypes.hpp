@@ -1,3 +1,6 @@
+/*
+ * version: 1.0
+ */
 #pragma once
 #ifndef CPPTYPES_HH_
 #define CPPTYPES_HH_
