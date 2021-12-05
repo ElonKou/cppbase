@@ -1,5 +1,5 @@
 /*
- * version: 1.0
+ * version: 1.1
  */
 #pragma once
 #ifndef CPPTYPES_HH_
@@ -81,6 +81,10 @@ union vec2 {
     }
 
     ~vec2() {}
+
+    T& operator[](const int index) {
+        return value[index];
+    }
 
     template <typename Tp>
     vec2 operator+(const vec2<Tp>& other) {
@@ -215,6 +219,10 @@ union vec3 {
     }
 
     ~vec3() {}
+
+    T& operator[](const int index) {
+        return value[index];
+    }
 
     template <typename Tp>
     vec3 operator+(const vec3<Tp>& other) {
@@ -364,6 +372,10 @@ union vec4 {
     }
 
     ~vec4() {}
+
+    T& operator[](const int index) {
+        return value[index];
+    }
 
     template <typename Tp>
     vec4 operator+(const vec4<Tp>& other) {
