@@ -1,10 +1,12 @@
 /*
- * version: 1.1
+ * version: 1.2
  */
 #pragma once
 #ifndef CPPTYPES_HH_
 #define CPPTYPES_HH_
 
+#include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <ostream>
@@ -110,12 +112,13 @@ union vec2 {
     vec2 operator/(const Tp& other) {
         return vec2<T>(x / other, y / other);
     }
-
-    friend std::ostream& operator<<(std::ostream& os, const vec2& v) {
-        os << "[" << v.x << "," << v.y << "]";
-        return os;
-    }
 };
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const vec2<T>& v) {
+    os << "[" << v.x << "," << v.y << "]";
+    return os;
+}
 
 template <typename T>
 bool operator==(const vec2<T>& first, const vec2<T>& second) {
@@ -248,12 +251,13 @@ union vec3 {
     vec3 operator/(const Tp& other) {
         return vec3<T>(x / other, y / other, z / other);
     }
-
-    friend std::ostream& operator<<(std::ostream& os, const vec3& v) {
-        os << "[" << v.x << "," << v.y << "," << v.z << "]";
-        return os;
-    }
 };
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const vec3<T>& v) {
+    os << "[" << v.x << "," << v.y << "," << v.z << "]";
+    return os;
+}
 
 template <typename T>
 bool operator==(const vec3<T>& first, const vec3<T>& second) {
@@ -401,12 +405,13 @@ union vec4 {
     vec4 operator/(const Tp& other) {
         return vec4<T>(x / other, y / other, z / other, t / other);
     }
-
-    friend std::ostream& operator<<(std::ostream& os, const vec4& v) {
-        os << "[" << v.x << "," << v.y << "," << v.z << "," << v.t << "]";
-        return os;
-    }
 };
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const vec4<T>& v) {
+    os << "[" << v.x << "," << v.y << "," << v.z << "," << v.t << "]";
+    return os;
+}
 
 template <typename T>
 bool operator==(const vec4<T>& first, const vec4<T>& second) {
@@ -484,7 +489,7 @@ class mat2 {
         , size(dim.x * dim.y)
         , ptr(nullptr) {
         if (size != 0) {
-            ptr = new Tp(size * sizeof(Tp));
+            ptr = new Tp[size];
             memset((void*)ptr, 0, size * sizeof(Tp));
             if (!ptr) {
                 std::cout << "ERROR: create mat2..." << std::endl;
@@ -505,6 +510,9 @@ class mat2 {
     }
 
     ~mat2() {
+        if (ptr) {
+            delete ptr;
+        }
     }
 
     void seteyes() {
@@ -554,22 +562,23 @@ class mat2 {
     vec2<Tp> getcols(const size_t& col) {
         return vec2<Tp>(ptr[col], ptr[col + dim.width]);
     }
+};
 
-    friend std::ostream& operator<<(std::ostream& os, mat2& m) {
-        if (m.ptr) {
-            std::cout << m.dim << " " << std::endl;
-            for (size_t i = 0; i < m.dim.height; i++) {
-                for (size_t j = 0; j < m.dim.width; j++) {
-                    os << m[i][j] << " ";
-                }
-                if (i != m.dim.height - 1) {
-                    os << std::endl;
-                }
+template <typename T>
+std::ostream& operator<<(std::ostream& os, mat2<T>& m) {
+    if (m.ptr) {
+        std::cout << m.dim << " " << std::endl;
+        for (size_t i = 0; i < m.dim.height; i++) {
+            for (size_t j = 0; j < m.dim.width; j++) {
+                os << m[i][j] << " ";
+            }
+            if (i != m.dim.height - 1) {
+                os << std::endl;
             }
         }
-        return os;
     }
-};
+    return os;
+}
 
 // Mat3
 template <typename Tp>
@@ -590,7 +599,7 @@ class mat3 {
         , size(dim.x * dim.y * dim.z)
         , ptr(nullptr) {
         if (size != 0) {
-            ptr = new Tp(size * sizeof(Tp));
+            ptr = new Tp[size];
             memset((void*)ptr, 0, size * sizeof(Tp));
             if (!ptr) {
                 std::cout << "ERROR: create mat3..." << std::endl;
@@ -607,6 +616,9 @@ class mat3 {
     }
 
     ~mat3() {
+        if (ptr) {
+            delete ptr;
+        }
     }
 
     void setones() {
@@ -652,6 +664,7 @@ class mat3 {
             return mat2<Tp>(Dim2(0, 0));
         }
     }
+
     // TODO: has bug
     mat2<Tp> getpals(const size_t& pal) {
         if (pal < dim.channel) {
@@ -662,25 +675,26 @@ class mat3 {
             return mat2<Tp>(Dim2(0, 0));
         }
     }
+};
 
-    friend std::ostream& operator<<(std::ostream& os, mat3& m) {
-        if (m.ptr) {
-            std::cout << m.dim << " " << std::endl;
-            for (size_t k = 0; k < m.dim.pals; k++) {
-                for (size_t i = 0; i < m.dim.height; i++) {
-                    for (size_t j = 0; j < m.dim.width; j++) {
-                        os << m.get(j, i, k) << " ";
-                    }
-                    os << std::endl;
+template <typename T>
+std::ostream& operator<<(std::ostream& os, mat3<T>& m) {
+    if (m.ptr) {
+        std::cout << m.dim << " " << std::endl;
+        for (size_t k = 0; k < m.dim.pals; k++) {
+            for (size_t i = 0; i < m.dim.height; i++) {
+                for (size_t j = 0; j < m.dim.width; j++) {
+                    os << m.get(j, i, k) << " ";
                 }
-                if (k != m.dim.pals - 1) {
-                    os << std::endl;
-                }
+                os << std::endl;
+            }
+            if (k != m.dim.pals - 1) {
+                os << std::endl;
             }
         }
-        return os;
     }
-};
+    return os;
+}
 
 // mat 2-d
 typedef mat2<char>          Mat2c;
