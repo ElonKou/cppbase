@@ -2,8 +2,8 @@
  * version: 1.2
  */
 #pragma once
-#ifndef CPPTYPES_HH_
-#define CPPTYPES_HH_
+#ifndef CPPTYPES_HPP_
+#define CPPTYPES_HPP_
 
 #include <cstdio>
 #include <cstdlib>
