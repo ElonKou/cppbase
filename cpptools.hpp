@@ -1,4 +1,6 @@
 #pragma once
+#ifndef CPPTOOLS_HPP_
+#define CPPTOOLS_HPP_
 
 #define ABS(x) (x > 0 ? x : -x)
 #define MAX(x, y) (x > y ? x : y)
@@ -44,17 +46,20 @@
 
 namespace cpptools {
 
-void SetRandomSeed(unsigned int seed) {
+template<typename T>
+inline void SetRandomSeed(unsigned int seed) {
     srand(seed);
 }
 
-void SetRandomSeed() {
+template<typename T>
+inline void SetRandomSeed() {
     struct timeval tv;
     gettimeofday(&tv, NULL);
     srand(tv.tv_usec);
 }
 
-bool RandomBool() {
+template<typename T>
+inline bool RandomBool() {
     if (Random(2) == 1) {
         return true;
     } else {
@@ -62,12 +67,14 @@ bool RandomBool() {
     }
 }
 
-int RandomInt(int range) {
+template<typename T>
+inline int RandomInt(int range) {
     return Random(range);
 }
 
-float RandomFloat() {
-    return RandomInt(1000000) * 1.0 / 1000000;
+template<typename T>
+inline float RandomFloat() {
+    return RandomInt<int>(1000000) * 1.0 / 1000000;
 }
 
 // convert types
@@ -105,7 +112,7 @@ enum INFO_TYPE {
     COLOR_WHITE
 };
 
-std::vector<std::string> COLORS = {BLACK, BROWN, GREEN, RED, RED, GREEN, BLUE, BLACK, BROWN, YELLOW, PURPLE, CYAN, GRAY, WHITE};
+const static std::vector<std::string> COLORS = {BLACK, BROWN, GREEN, RED, RED, GREEN, BLUE, BLACK, BROWN, YELLOW, PURPLE, CYAN, GRAY, WHITE};
 
 template <typename T>
 void PrintInfo(T str, INFO_TYPE info_type) {
@@ -115,6 +122,7 @@ void PrintInfo(T str, INFO_TYPE info_type) {
 
 // File tools
 
+template<typename T>
 std::vector<std::string> GetFiles(std::string dir) {
     std::vector<std::string> files;
     DIR*                     dp = opendir(dir.c_str());
@@ -129,6 +137,7 @@ std::vector<std::string> GetFiles(std::string dir) {
     return files;
 }
 
+template<typename T>
 std::vector<std::string> Split(const std::string& s, const std::string& seperator) {
     std::vector<std::string> result;
     size_t                   i = 0;
@@ -163,6 +172,7 @@ std::vector<std::string> Split(const std::string& s, const std::string& seperato
     return result;
 }
 
+template<typename T>
 std::string& Replace_all(std::string& str, const std::string& old_value, const std::string& new_value) {
     while (true) {
         std::string::size_type pos(0);
@@ -175,3 +185,5 @@ std::string& Replace_all(std::string& str, const std::string& old_value, const s
 }
 
 }; // namespace cpptools
+
+#endif
