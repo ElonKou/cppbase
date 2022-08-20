@@ -270,6 +270,11 @@ class Any {
         : content_(other.content_ ? other.content_->clone() : nullptr) {
     }
 
+    Any& operator=(const Any& other){
+        content_ = other.content_ ? other.content_->clone() : nullptr;
+        return *this;
+    }
+
     ~Any() {
         delete content_;
     }
