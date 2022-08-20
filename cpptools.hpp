@@ -33,7 +33,9 @@
 #define CLRLINE "\r\e[K"
 #define CLOSE "\033[0m"
 
+#include <chrono>
 #include <dirent.h>
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <sys/time.h>
@@ -46,19 +48,19 @@
 
 namespace cpptools {
 
-template<typename T>
+template <typename T>
 inline void SetRandomSeed(unsigned int seed) {
     srand(seed);
 }
 
-template<typename T>
+template <typename T>
 inline void SetRandomSeed() {
     struct timeval tv;
     gettimeofday(&tv, NULL);
     srand(tv.tv_usec);
 }
 
-template<typename T>
+template <typename T>
 inline bool RandomBool() {
     if (Random(2) == 1) {
         return true;
@@ -67,12 +69,12 @@ inline bool RandomBool() {
     }
 }
 
-template<typename T>
+template <typename T>
 inline int RandomInt(int range) {
     return Random(range);
 }
 
-template<typename T>
+template <typename T>
 inline float RandomFloat() {
     return RandomInt<int>(1000000) * 1.0 / 1000000;
 }
@@ -122,7 +124,7 @@ void PrintInfo(T str, INFO_TYPE info_type) {
 
 // File tools
 
-template<typename T>
+template <typename T>
 std::vector<std::string> GetFiles(std::string dir) {
     std::vector<std::string> files;
     DIR*                     dp = opendir(dir.c_str());
@@ -137,7 +139,7 @@ std::vector<std::string> GetFiles(std::string dir) {
     return files;
 }
 
-template<typename T>
+template <typename T>
 std::vector<std::string> Split(const std::string& s, const std::string& seperator) {
     std::vector<std::string> result;
     size_t                   i = 0;
@@ -172,7 +174,7 @@ std::vector<std::string> Split(const std::string& s, const std::string& seperato
     return result;
 }
 
-template<typename T>
+template <typename T>
 std::string& Replace_all(std::string& str, const std::string& old_value, const std::string& new_value) {
     while (true) {
         std::string::size_type pos(0);
@@ -183,6 +185,104 @@ std::string& Replace_all(std::string& str, const std::string& old_value, const s
     }
     return str;
 }
+
+using time_point = std::chrono::time_point<std::chrono::high_resolution_clock>;
+
+// Timer
+class Timer {
+  private:
+    time_point st;   // start time point;
+    time_point now;  // start time point;
+    time_point last; // start time point;
+
+  public:
+    Timer() {
+        st   = std::chrono::high_resolution_clock::now();
+        last = st;
+        now  = st;
+    }
+
+    ~Timer(){}
+
+    void Start() {
+        now  = std::chrono::high_resolution_clock::now();
+        last = now;
+    }
+
+    double StopMS() {
+        now         = std::chrono::high_resolution_clock::now();
+        double dura = std::chrono::duration_cast<std::chrono::milliseconds>(now - last).count();
+        last        = now;
+        return dura;
+    }
+
+    double StopUS() {
+        now         = std::chrono::high_resolution_clock::now();
+        double dura = std::chrono::duration_cast<std::chrono::microseconds>(now - last).count();
+        last        = now;
+        return dura;
+    }
+};
+
+// Simpele std::Any in c++17
+class PlaceHolder {
+  public:
+    PlaceHolder() {}
+
+    virtual ~PlaceHolder() {}
+
+    virtual PlaceHolder* clone() = 0;
+};
+
+template <typename ValueType>
+class Holder : public PlaceHolder {
+  public:
+    Holder() {}
+
+    Holder(const ValueType& value)
+        : _held(value) {}
+
+    ~Holder() {}
+
+    virtual PlaceHolder* clone() override {
+        return new Holder(_held);
+    }
+
+  public:
+    ValueType _held; // real data.
+};
+
+class Any {
+  private:
+    PlaceHolder* content_; // pointer to the real data.
+
+  public:
+    Any()
+        : content_(nullptr) {
+    }
+
+    template <typename ValueType>
+    Any(const ValueType& value)
+        : content_(new Holder<ValueType>(value)) {
+    }
+
+    Any(const Any& other)
+        : content_(other.content_ ? other.content_->clone() : nullptr) {
+    }
+
+    ~Any() {
+        delete content_;
+    }
+
+    template <typename ValueType>
+    ValueType get() {
+        if (content_) {
+            return static_cast<Holder<ValueType>*>(content_)->_held;
+        } else {
+            return 0;
+        }
+    }
+};
 
 }; // namespace cpptools
 
