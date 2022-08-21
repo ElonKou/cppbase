@@ -21,12 +21,15 @@ int main(int argc, char* argv[]) {
     Any c(x);
     Any d(b);
     Any e = c;
+    Any f;
+    f = b;
 
     std::cout << a.get<std::string>() << std::endl;
     std::cout << b.get<float>() << std::endl;
     std::cout << c.get<int>() << std::endl;
     std::cout << d.get<float>() << std::endl;
     std::cout << e.get<int>() << std::endl;
+    std::cout << f.get<float>() << std::endl;
 
     return 0;
 }
