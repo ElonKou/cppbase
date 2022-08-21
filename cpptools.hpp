@@ -202,7 +202,7 @@ class Timer {
         now  = st;
     }
 
-    ~Timer(){}
+    ~Timer() {}
 
     void Start() {
         now  = std::chrono::high_resolution_clock::now();
@@ -223,6 +223,16 @@ class Timer {
         return dura;
     }
 };
+
+template <typename T>
+inline double GetTimerMS(time_point t1, time_point t2) {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
+}
+
+template <typename T>
+inline double GetTimerUS(time_point t1, time_point t2) {
+    return std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+}
 
 // Simpele std::Any in c++17
 class PlaceHolder {
@@ -268,6 +278,11 @@ class Any {
 
     Any(const Any& other)
         : content_(other.content_ ? other.content_->clone() : nullptr) {
+    }
+
+    Any& operator=(const Any& other) {
+        content_ = other.content_ ? other.content_->clone() : nullptr;
+        return *this;
     }
 
     ~Any() {
