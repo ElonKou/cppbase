@@ -6,10 +6,9 @@
 *  Date     : Mon Nov 15 13:17:30 2021
 ================================================================*/
 
-#include "cpptypes.hpp"
+#include "cpptypes.hh"
 #include <iostream>
 
-using namespace std;
 using namespace cpptypes;
 
 void test_creator() {
@@ -92,7 +91,7 @@ int main(int argc, char* argv[]) {
     // test_add();
     // test_multipy();
 
-    // mat_creator();
-    mat_vec();
+    mat_creator();
+    // mat_vec();
     return 0;
 }

@@ -6,13 +6,21 @@
 *  Date     : Sun May 15 11:32:39 2022
 ================================================================*/
 
-#include "cpptools.hpp"
+#include "cpptools.hh"
 #include <iostream>
 
 using namespace cpptools;
 
 int main(int argc, char* argv[]) {
-    PrintInfo(std::to_string(31231313), INFO_TYPE::WARNING);
-    PrintInfo("dsadaweqwe31d\n\nsss", INFO_TYPE::WARNING);
+    int         a = 23;
+    float       b = 23.23;
+    double      c = 213.33;
+    std::string d = "some info";
+
+    PrintInfo(std::to_string(a) + "\n", INFO_TYPE::WARNING);
+    PrintInfo(std::to_string(b) + "\n", INFO_TYPE::SUCCEED);
+    PrintInfo(std::to_string(c) + "\n", INFO_TYPE::ERROR);
+    PrintInfo(d + "\n", INFO_TYPE::OK);
+    PrintInfo(d + "\n", INFO_TYPE::SUCCEED);
     return 0;
 }
