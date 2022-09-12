@@ -1,0 +1,7 @@
+# !/bin/bash
+
+g++ some.cc -shared -fPIC -std=c++11 -o libsome.so;
+g++ DeriveA.cc DeriveB.cc main.cc -L. -lsome -std=c++11 -o main;
+./main;
+
+# export LD_LIBRARY_PATH="/home/dlkou/DLKOU/02.BIULAB/biulab/example/reflect:$LD_LIBRARY_PATH"
