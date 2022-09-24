@@ -44,7 +44,7 @@
 #include <vector>
 
 // Random part
-#define Random(x) (rand() % x)
+#define RandomX(x) (rand() % x)
 
 namespace cpptools {
 
@@ -59,7 +59,7 @@ inline void SetRandomSeed() {
 }
 
 inline bool RandomBool() {
-    if (Random(2) == 1) {
+    if (RandomX(2) == 1) {
         return true;
     } else {
         return false;
@@ -67,7 +67,7 @@ inline bool RandomBool() {
 }
 
 inline int RandomInt(int range) {
-    return Random(range);
+    return RandomX(range);
 }
 inline float RandomFloat() {
     return RandomInt(1000000) * 1.0 / 1000000;
