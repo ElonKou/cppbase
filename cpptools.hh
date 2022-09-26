@@ -114,7 +114,7 @@ void PrintInfo(std::string str, INFO_TYPE info_type = INFO_TYPE::OK);
 
 // File tools
 
-std::vector<std::string> GetFiles(std::string dir);
+std::vector<std::string> GetFiles(std::string dir, std::string pattern = "");
 
 std::vector<std::string> Split(const std::string& s, const std::string& seperator);
 

@@ -20,7 +20,7 @@ void PrintInfo(std::string str, INFO_TYPE info_type) {
 
 // File tools
 
-std::vector<std::string> GetFiles(std::string dir) {
+std::vector<std::string> GetFiles(std::string dir, std::string pattern) {
     std::vector<std::string> files;
     DIR*                     dp = opendir(dir.c_str());
     struct dirent*           dirp;
@@ -28,7 +28,25 @@ std::vector<std::string> GetFiles(std::string dir) {
         if (std::string(dirp->d_name) == "." || std::string(dirp->d_name) == "..") {
             continue;
         }
-        files.push_back(std::string(dirp->d_name));
+        bool        ret = true;
+        std::string tmp = std::string(dirp->d_name);
+        if (pattern.size() > 0) {
+            if (tmp.size() < pattern.size()) {
+                continue;
+            }
+            for (size_t i = 0; i < pattern.size(); i++) {
+                size_t idx = pattern.size() - 1 - i;
+                size_t idy = tmp.size() - 1 - i;
+                if (tmp[idy] != pattern[idx]) {
+                    ret = false;
+                    break;
+                }
+            }
+            if (!ret) {
+                continue;
+            }
+        }
+        files.push_back(tmp);
     }
     closedir(dp);
     return files;
