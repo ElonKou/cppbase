@@ -1,6 +1,12 @@
-/*
- * version: 1.2
- */
+/*================================================================
+*  Copyright (C)2022 All rights reserved.
+*  FileName : cpptypes.hh
+*  Author   : elonkou
+*  Email    : elonkou@ktime.cc
+*  Version  : 1.13
+*  Date     : Sun 08 Jan 2023 03:03:54 PM CST
+================================================================*/
+
 #pragma once
 #ifndef CPPTYPES_HH
 #define CPPTYPES_HH
@@ -13,7 +19,10 @@
 
 namespace cpptypes {
 
-// vec2
+/**
+ * @brief vec2 simple 2d vector.
+ * contains 2 items in vector.
+ */
 template <typename T>
 union vec2 {
     struct {
@@ -130,7 +139,10 @@ bool operator!=(const vec2<T>& first, const vec2<T>& second) {
     return first.x != second.x || first.y != second.y;
 }
 
-// vec3
+/**
+ * @brief vec3 simple 3d vector.
+ * contains 3 items in vector.
+ */
 template <typename T>
 union vec3 {
     struct {
@@ -269,7 +281,10 @@ bool operator!=(const vec3<T>& first, const vec3<T>& second) {
     return first.x != second.x || first.y != second.y || first.z != second.z;
 }
 
-// vec4
+/**
+ * @brief vec4 simple 4d vector.
+ * contains 4 items in vector.
+ */
 template <typename T>
 union vec4 {
     struct {
@@ -423,6 +438,81 @@ bool operator!=(const vec4<T>& first, const vec4<T>& second) {
     return first.x != second.x || first.y != second.y || first.z != second.z || first.t != second.t;
 }
 
+/**
+ * @brief vec simple 1d vector.
+ * vec has only one dimension [vector].
+ */
+template <typename Tp>
+class vec {
+  public:
+    size_t size; // record data counts of type Tp.
+    Tp*    ptr;  // pointer for data.
+
+  public:
+    vec() {
+        size = 0;
+        ptr  = nullptr;
+    }
+
+    vec(size_t sz_) {
+        size = sz_;
+        if (size != 0) {
+            ptr = new Tp[size];
+            memset((void*)ptr, 0, size * sizeof(Tp));
+            if (!ptr) {
+                std::cout << "ERROR: create mat2..." << std::endl;
+            }
+        }
+    }
+
+    vec(Tp* ptr_, size_t sz_) {
+        if (ptr_ != nullptr) {
+            size = sz_;
+            ptr  = ptr_;
+        }
+    }
+
+    ~vec() {
+        if (ptr) {
+            delete ptr;
+        }
+    }
+
+    Tp& operator[](const size_t p) {
+        return *(ptr + p);
+    }
+
+    Tp& get(size_t x) {
+        return ptr[x];
+    }
+
+    void setones() {
+        for (size_t i = 0; i < size; i++) {
+            (*this).ptr[i] = (Tp)1;
+        }
+    }
+
+    void setlines() {
+        for (size_t i = 0; i < size; i++) {
+            (*this).ptr[i] = (Tp)i;
+        }
+    }
+
+    template <typename T>
+    friend std::ostream& operator<<(std::ostream& os, vec<T>& v) {
+        os << "[";
+        for (size_t i = 0; i < v.size; i++) {
+            os << v[i];
+            if (i != (v.size - 1)) {
+                os << ", ";
+            }
+        }
+        os << "]";
+
+        return os;
+    }
+};
+
 // vector 2d
 typedef vec2<char>          vec2c;
 typedef vec2<unsigned char> vec2uc;
@@ -470,7 +560,10 @@ typedef vec4i Point4i; // Point4
 typedef vec4f Point4f; // Point4
 typedef vec4d Point4d; // Point4
 
-// Mat2
+/**
+ * @brief mat2 simple 2d matrix.
+ * matrix has 2d dimension.
+ */
 template <typename Tp>
 class mat2 {
   public:
@@ -562,25 +655,28 @@ class mat2 {
     vec2<Tp> getcols(const size_t& col) {
         return vec2<Tp>(ptr[col], ptr[col + dim.width]);
     }
-};
 
-template <typename T>
-std::ostream& operator<<(std::ostream& os, mat2<T>& m) {
-    if (m.ptr) {
-        std::cout << m.dim << " " << std::endl;
-        for (size_t i = 0; i < m.dim.height; i++) {
-            for (size_t j = 0; j < m.dim.width; j++) {
-                os << m[i][j] << " ";
-            }
-            if (i != m.dim.height - 1) {
-                os << std::endl;
+    template <typename T>
+    friend std::ostream& operator<<(std::ostream& os, mat2<T>& m) {
+        if (m.ptr) {
+            std::cout << m.dim << " " << std::endl;
+            for (size_t i = 0; i < m.dim.height; i++) {
+                for (size_t j = 0; j < m.dim.width; j++) {
+                    os << m[i][j] << " ";
+                }
+                if (i != m.dim.height - 1) {
+                    os << std::endl;
+                }
             }
         }
+        return os;
     }
-    return os;
-}
+};
 
-// Mat3
+/**
+ * @brief mat3 simple 3d matrix.
+ * matrix has 3d dimension.
+ */
 template <typename Tp>
 class mat3 {
   public:
@@ -641,60 +737,35 @@ class mat3 {
         }
     }
 
-    // TODO: has bug
-    mat2<Tp> getrows(const size_t& row) {
-        if (row) {
-            // return vec2<Tp>(ptr[row * dim.width], ptr[row * dim.width + 1]);
-        } else {
-            return mat2<Tp>(Dim2(0, 0));
+    void getpals(const size_t& pal, mat2<Tp>& tmp) {
+        std::cout << dim.channel << " " << pal << std::endl;
+        if (pal < dim.channel) {
+            tmp.dim  = Dim2(dim.width, dim.height);
+            tmp.size = dim.width * dim.height;
+            tmp.ptr  = new Tp[tmp.size];
+            memcpy((void*)tmp.ptr, (void*)(ptr + dim.width * dim.height * pal), tmp.size * sizeof(Tp));
         }
     }
 
-    // TODO: has bug
-    mat2<Tp> getcols(const size_t& col) {
-        if (col < dim.width) {
-            mat2<Tp> tmp(Dim2(dim.pals, dim.height));
-            for (size_t i = 0; i < dim.height; i++) {
-                for (size_t j = 0; j < dim.pals; j++) {
-                    tmp[i][j] = get(col, i, j);
+    template <typename T>
+    friend std::ostream& operator<<(std::ostream& os, mat3<T>& m) {
+        if (m.ptr) {
+            std::cout << m.dim << " " << std::endl;
+            for (size_t k = 0; k < m.dim.pals; k++) {
+                for (size_t i = 0; i < m.dim.height; i++) {
+                    for (size_t j = 0; j < m.dim.width; j++) {
+                        os << m.get(j, i, k) << " ";
+                    }
+                    os << std::endl;
+                }
+                if (k != m.dim.pals - 1) {
+                    os << std::endl;
                 }
             }
-            return tmp;
-        } else {
-            return mat2<Tp>(Dim2(0, 0));
         }
-    }
-
-    // TODO: has bug
-    mat2<Tp> getpals(const size_t& pal) {
-        if (pal < dim.channel) {
-            mat2<Tp> tmp(Dim2(dim.width, dim.height));
-            memcpy((void*)tmp.ptr, (void*)(ptr + dim.width * dim.height * pal), dim.width * dim.height * sizeof(Tp));
-            return tmp;
-        } else {
-            return mat2<Tp>(Dim2(0, 0));
-        }
+        return os;
     }
 };
-
-template <typename T>
-std::ostream& operator<<(std::ostream& os, mat3<T>& m) {
-    if (m.ptr) {
-        std::cout << m.dim << " " << std::endl;
-        for (size_t k = 0; k < m.dim.pals; k++) {
-            for (size_t i = 0; i < m.dim.height; i++) {
-                for (size_t j = 0; j < m.dim.width; j++) {
-                    os << m.get(j, i, k) << " ";
-                }
-                os << std::endl;
-            }
-            if (k != m.dim.pals - 1) {
-                os << std::endl;
-            }
-        }
-    }
-    return os;
-}
 
 // mat 2-d
 typedef mat2<char>          Mat2c;

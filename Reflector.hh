@@ -1,3 +1,12 @@
+/*================================================================
+*  Copyright (C)2022 All rights reserved.
+*  FileName : cpptypes.hh
+*  Author   : elonkou
+*  Email    : elonkou@ktime.cc
+*  Version  : 0.1
+*  Date     : Sun 08 Jan 2023 03:03:54 PM CST
+================================================================*/
+
 #pragma once
 
 #ifndef REFLECTOR_HH_
