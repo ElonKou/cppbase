@@ -124,14 +124,16 @@ void PrintInfo(std::string str, INFO_TYPE info_type = INFO_TYPE::OK);
 // File tools
 
 std::vector<std::string> GetFiles(std::string dir, std::string pattern = "");
-
 std::vector<std::string> Split(const std::string& s, const std::string& seperator);
-
-std::string& Replace_all(std::string& str, const std::string& old_value, const std::string& new_value);
-
-using time_point = std::chrono::time_point<std::chrono::high_resolution_clock>;
+std::string&             Replace_all(std::string& str, const std::string& old_value, const std::string& new_value);
+std::string              CombinePath(std::vector<std::string> paths); ///< combine sub-path into path.
+bool                     IsExist(std::string filename);               ///< Check folder exist.
+bool                     CreateFodler(std::string foldername);        ///< Create folder.
+bool                     DeleteFolder(std::string foldername);        ///< Delete folder.
 
 // Timer
+using time_point = std::chrono::time_point<std::chrono::high_resolution_clock>;
+
 class Timer {
   private:
     time_point st;   // start time point;

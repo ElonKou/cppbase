@@ -97,6 +97,52 @@ std::string& Replace_all(std::string& str, const std::string& old_value, const s
     return str;
 }
 
+std::string CombinePath(std::vector<std::string> paths) {
+    std::string ret = "";
+    for (size_t i = 0; i < paths.size(); i++) {
+        if (i != 0) {
+            if (paths[i][0] == '/') {
+                paths[i] = paths[i].substr(1, paths[i].size() - 1);
+            }
+        }
+        if (paths[i][paths[i].size() - 1] == '/') {
+            paths[i] = paths[i].substr(0, paths[i].size() - 1);
+        }
+        std::cout << paths[i] << std::endl;
+        if (i == 0) {
+            ret = paths[i];
+        } else {
+            ret = ret + "/" + paths[i];
+        }
+    }
+    return ret;
+}
+
+bool IsExist(std::string filename) {
+    int ret = access(filename.c_str(), 0);
+    return ret == 0;
+}
+bool CreateFodler(std::string foldername) {
+    if (!IsExist(foldername)) {
+        std::string cmd = "mkdir -p " + foldername;
+        system(cmd.c_str());
+        return IsExist(foldername);
+    } else {
+        return true;
+    }
+}
+
+bool DeleteFolder(std::string foldername) {
+    if (IsExist(foldername)) {
+        std::string cmd = "rm -rf " + foldername;
+        system(cmd.c_str());
+        return !IsExist(foldername);
+    } else {
+        std::cout << foldername << " doesn't exist." << std::endl;
+        return true;
+    }
+}
+
 // Timer
 Timer::Timer() {
     st   = std::chrono::high_resolution_clock::now();
