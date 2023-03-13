@@ -108,7 +108,6 @@ std::string CombinePath(std::vector<std::string> paths) {
         if (paths[i][paths[i].size() - 1] == '/') {
             paths[i] = paths[i].substr(0, paths[i].size() - 1);
         }
-        std::cout << paths[i] << std::endl;
         if (i == 0) {
             ret = paths[i];
         } else {
@@ -125,8 +124,8 @@ bool IsExist(std::string filename) {
 bool CreateFodler(std::string foldername) {
     if (!IsExist(foldername)) {
         std::string cmd = "mkdir -p " + foldername;
-        system(cmd.c_str());
-        return IsExist(foldername);
+        int         ret = system(cmd.c_str());
+        return ret == 0;
     } else {
         return true;
     }
@@ -135,8 +134,8 @@ bool CreateFodler(std::string foldername) {
 bool DeleteFolder(std::string foldername) {
     if (IsExist(foldername)) {
         std::string cmd = "rm -rf " + foldername;
-        system(cmd.c_str());
-        return !IsExist(foldername);
+        int         ret = system(cmd.c_str());
+        return ret == 0;
     } else {
         std::cout << foldername << " doesn't exist." << std::endl;
         return true;
