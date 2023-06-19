@@ -22,12 +22,12 @@ void PrintInfo(std::string str, INFO_TYPE info_type) {
 
 std::vector<std::string> GetFilePath(std::string path) {
     size_t      ipos_root = path.find_last_of('/');
+    size_t      ipos_sub  = path.find_last_of('.');
     std::string path_root = path.substr(0, ipos_root);
-    size_t      ipos_pat  = path.find_last_of('/') + 1;
-    std::string path_pat  = path.substr(ipos_pat, path.length() - ipos_pat);
-    size_t      ipos_sub  = path.find_last_of('.') + 1;
+    std::string path_pat  = path.substr(ipos_root + 1, path.length() - ipos_root - 1);
+    std::string path_name = path.substr(ipos_root + 1, ipos_sub - ipos_root - 1);
     std::string path_sub  = path.substr(ipos_sub, path.length() - ipos_sub);
-    return {path_root, path_pat, path_sub};
+    return {path_root, path_pat, path_name, path_sub};
 }
 
 std::vector<std::string> GetFiles(std::string dir, std::string pattern) {
