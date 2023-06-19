@@ -20,6 +20,16 @@ void PrintInfo(std::string str, INFO_TYPE info_type) {
 
 // File tools
 
+std::vector<std::string> GetFilePath(std::string path) {
+    size_t      ipos_root = path.find_last_of('/');
+    std::string path_root = path.substr(0, ipos_root);
+    size_t      ipos_pat  = path.find_last_of('/') + 1;
+    std::string path_pat  = path.substr(ipos_pat, path.length() - ipos_pat);
+    size_t      ipos_sub  = path.find_last_of('.') + 1;
+    std::string path_sub  = path.substr(ipos_sub, path.length() - ipos_sub);
+    return {path_root, path_pat, path_sub};
+}
+
 std::vector<std::string> GetFiles(std::string dir, std::string pattern) {
     std::vector<std::string> files;
     DIR*                     dp = opendir(dir.c_str());
@@ -90,7 +100,7 @@ std::string& Replace_all(std::string& str, const std::string& old_value, const s
     while (true) {
         std::string::size_type pos(0);
         if ((pos = str.find(old_value)) != std::string::npos)
-            str.replace(pos, old_value.length(), new_value);
+            str.replace(pos, new_value.length(), new_value);
         else
             break;
     }
