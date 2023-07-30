@@ -15,7 +15,7 @@
 #define MAX(x, y) (x > y ? x : y)
 #define MIN(x, y) (x < y ? x : y)
 
-#define NONE "\e[0m"
+#define NONEC "\e[0m"
 #define BLACK "\e[0;30m"
 #define L_BLACK "\e[1;30m"
 #define RED "\e[0;31m"

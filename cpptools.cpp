@@ -14,7 +14,7 @@ namespace cpptools {
 std::vector<std::string> COLORS = {BLACK, BROWN, GREEN, RED, RED, GREEN, BLUE, BLACK, BROWN, YELLOW, PURPLE, CYAN, GRAY, WHITE};
 
 void PrintInfo(std::string str, INFO_TYPE info_type) {
-    std::string s = COLORS[size_t(info_type)] + str + NONE;
+    std::string s = COLORS[size_t(info_type)] + str + NONEC;
     printf("%s", s.c_str());
 }
 
