@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "Compile [CppServer] ..."
+g++ ./mini_client.cc ../../src/cppnetwork/MiniNetwork/MiniClient.cpp ../../src/cppnetwork/MiniNetwork/SocketCommon.cpp -I../../include/cppnetwork -O3 -std=c++11 -o ./mini_client
+g++ ./mini_server.cc ../../src/cppnetwork/MiniNetwork/MiniServer.cpp ../../src/cppnetwork/MiniNetwork/SocketCommon.cpp -I../../include/cppnetwork -O3 -std=c++11 -o ./mini_server -lpthread
+echo -e "\033[32mCompile [CppServer] succeed.\033[0m"

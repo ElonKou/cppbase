@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Base.hh"
+#include "RefBase.hh"
 
 class DeriveB : public Base {
   public:
     void Print() override;
 };
-REGISTER(DeriveB);
+REGISTER_APPLICATION(DeriveB);

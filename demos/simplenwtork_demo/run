@@ -1,0 +1,4 @@
+#!/bin/bash
+
+g++ -Wall -o server_demo server_demo.cpp -I../../include/cppnetwork ../../src/cppnetwork/SimpleNetwork/TCPServer.cpp -std=c++11 -lpthread
+g++ -Wall -o client_demo client_demo.cpp -I../../include/cppnetwork ../../src/cppnetwork/SimpleNetwork/TCPClient.cpp -std=c++11 -lpthread
