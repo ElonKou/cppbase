@@ -20,13 +20,14 @@ void PrintInfo(std::string str, INFO_TYPE info_type) {
 
 // File tools
 
+// example : "/home/biulab/app/TENCENT_EXP/qikan_cache/joint.json"
 std::vector<std::string> GetFilePath(std::string path) {
     size_t      ipos_root = path.find_last_of('/');
     size_t      ipos_sub  = path.find_last_of('.');
-    std::string path_root = path.substr(0, ipos_root);
-    std::string path_pat  = path.substr(ipos_root + 1, path.length() - ipos_root - 1);
-    std::string path_name = path.substr(ipos_root + 1, ipos_sub - ipos_root - 1);
-    std::string path_sub  = path.substr(ipos_sub, path.length() - ipos_sub);
+    std::string path_root = path.substr(0, ipos_root);                                 // folder     : "/home/biulab/app/TENCENT_EXP/qikan_cache"
+    std::string path_pat  = path.substr(ipos_root + 1, path.length() - ipos_root - 1); // file_path  : "joint.json"
+    std::string path_name = path.substr(ipos_root + 1, ipos_sub - ipos_root - 1);      // short name : "joint"
+    std::string path_sub  = path.substr(ipos_sub, path.length() - ipos_sub);           // sub name   : ".json"
     return {path_root, path_pat, path_name, path_sub};
 }
 
