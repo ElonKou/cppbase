@@ -26,6 +26,7 @@ class MiniServer {
         port         = 12345;
         new_socket   = 0;
         is_listening = false;
+        is_connected = false;
     }
     ~MiniServer() { TerminateServer(); }
 

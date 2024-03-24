@@ -42,14 +42,14 @@ class MotionServer : public MiniServer {
             if (ReadMsg(msg)) {
 
                 std::cout << "   ";
-                // PrintMsg("[" + ipname + "]: " + msg); // print message.
+                PrintMsg("[" + ipname + "]: " + msg); // print message.
 
-                nlohmann::json     data = nlohmann::json::parse(msg);
-                std::vector<float> pos  = data["pos"].get<std::vector<float>>();
-                ModifiedValue(glm::vec3(pos[0], pos[1], pos[2]));
+                // nlohmann::json     data = nlohmann::json::parse(msg);
+                // std::vector<float> pos  = data["pos"].get<std::vector<float>>();
+                // ModifiedValue(glm::vec3(pos[0], pos[1], pos[2]));
 
-                std::string posv = std::to_string(value.x) + "," + std::to_string(value.y) + "," + std::to_string(value.z);
-                PrintMsg("[" + ipname + "]: " + posv);
+                // std::string posv = std::to_string(value.x) + "," + std::to_string(value.y) + "," + std::to_string(value.z);
+                // PrintMsg("[" + ipname + "]: " + posv);
             }
         }
     }
