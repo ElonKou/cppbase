@@ -78,8 +78,8 @@ inline bool RandomBool() {
 inline int RandomInt(int range) {
     return RandomX(range);
 }
-inline float RandomFloat() {
-    return RandomInt(1000000) * 1.0 / 1000000;
+inline float RandomFloat(float v=1.0f) {
+    return RandomInt(1000000) * v / 1000000;
 }
 
 // convert types
