@@ -10,8 +10,8 @@
 
 namespace cpptools {
 
-// print
-std::vector<std::string> COLORS = {BLACK, BROWN, GREEN, RED, RED, GREEN, BLUE, BLACK, BROWN, YELLOW, PURPLE, CYAN, GRAY, WHITE};
+// print information
+std::vector<std::string> COLORS = {GREEN, WHITE, BROWN, RED, RED, RED, GREEN, BLUE, BLACK, BROWN, YELLOW, PURPLE, CYAN, GRAY, WHITE};
 
 void PrintInfo(std::string str, INFO_TYPE info_type) {
     std::string s = COLORS[size_t(info_type)] + str + NONEC;

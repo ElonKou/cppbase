@@ -78,7 +78,7 @@ inline bool RandomBool() {
 inline int RandomInt(int range) {
     return RandomX(range);
 }
-inline float RandomFloat(float v=1.0f) {
+inline float RandomFloat(float v = 1.0f) {
     return RandomInt(1000000) * v / 1000000;
 }
 
@@ -101,10 +101,11 @@ std::string ToString(const Type& str) {
 
 // print color strings
 enum INFO_TYPE {
-    OK,      // BLACK
-    WARNING, // BROWN
     SUCCEED, // GREEN
+    INFO,    // BLACK
+    WARNING, // BROWN
     ERROR,   // RED
+    FATAL,   // RED
     COLOR_RED,
     COLOR_BLUE,
     COLOR_GREEN,
@@ -119,7 +120,7 @@ enum INFO_TYPE {
 
 extern std::vector<std::string> COLORS;
 
-void PrintInfo(std::string str, INFO_TYPE info_type = INFO_TYPE::OK);
+void PrintInfo(std::string str, INFO_TYPE info_type = INFO_TYPE::INFO);
 
 // File tools
 
