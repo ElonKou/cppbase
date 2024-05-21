@@ -122,6 +122,8 @@ extern std::vector<std::string> COLORS;
 
 void PrintInfo(std::string str, INFO_TYPE info_type = INFO_TYPE::INFO);
 
+std::string GetNowTimeStr(bool hasyear = false);
+
 // File tools
 
 std::vector<std::string> GetFilePath(std::string path);

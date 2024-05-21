@@ -11,11 +11,25 @@
 namespace cpptools {
 
 // print information
-std::vector<std::string> COLORS = {GREEN, WHITE, BROWN, RED, RED, RED, GREEN, BLUE, BLACK, BROWN, YELLOW, PURPLE, CYAN, GRAY, WHITE};
+std::vector<std::string> COLORS = {GREEN, CYAN, BROWN, RED, RED, RED, GREEN, BLUE, BLACK, BROWN, YELLOW, PURPLE, CYAN, GRAY, WHITE};
 
 void PrintInfo(std::string str, INFO_TYPE info_type) {
     std::string s = COLORS[size_t(info_type)] + str + NONEC;
     printf("%s", s.c_str());
+}
+
+std::string GetNowTimeStr(bool hasyear) {
+    auto        now      = std::chrono::high_resolution_clock::now();
+    std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+    std::tm*    now_tm   = std::localtime(&now_time);
+
+    char buffer[32];
+    if (hasyear) {
+        std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", now_tm);
+    } else {
+        std::strftime(buffer, sizeof(buffer), "%H:%M:%S", now_tm);
+    }
+    return std::string(buffer);
 }
 
 // File tools
