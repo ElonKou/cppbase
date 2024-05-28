@@ -18,12 +18,13 @@ void PrintInfo(std::string str, INFO_TYPE info_type) {
     printf("%s", s.c_str());
 }
 
-std::string GetNowTimeStr(bool hasyear) {
-    auto        now      = std::chrono::high_resolution_clock::now();
-    std::time_t now_time = std::chrono::system_clock::to_time_t(now);
-    std::tm*    now_tm   = std::localtime(&now_time);
+std::time_t GetNowTime() {
+    return std::chrono::system_clock::to_time_t(std::chrono::high_resolution_clock::now());
+}
 
-    char buffer[32];
+std::string ConvertTime2Str(std::time_t tm, bool hasyear) {
+    std::tm* now_tm = std::localtime(&tm);
+    char     buffer[32];
     if (hasyear) {
         std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", now_tm);
     } else {
