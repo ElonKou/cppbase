@@ -168,6 +168,14 @@ bool DeleteFolder(std::string foldername) {
     }
 }
 
+inline double GetTimerMS(time_point t1, time_point t2) {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
+}
+
+inline double GetTimerUS(time_point t1, time_point t2) {
+    return std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+}
+
 // Timer
 Timer::Timer() {
     st   = std::chrono::high_resolution_clock::now();
@@ -196,12 +204,17 @@ double Timer::StopUS() {
     return dura;
 }
 
-inline double GetTimerMS(time_point t1, time_point t2) {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
+double Timer::GetRelativeTime() {
+    time_point c = std::chrono::high_resolution_clock::now();
+    return GetTimerMS(st, c);
 }
 
-inline double GetTimerUS(time_point t1, time_point t2) {
-    return std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+double Timer::GetAbstractTime() {
+    auto now                  = std::chrono::system_clock::now();
+    auto duration_since_epoch = now.time_since_epoch();
+
+    auto milliseconds_since_epoch = std::chrono::duration_cast<std::chrono::milliseconds>(duration_since_epoch).count();
+    return milliseconds_since_epoch;
 }
 
 } // namespace cpptools

@@ -139,6 +139,10 @@ bool                     DeleteFolder(std::string foldername);        ///< Delet
 // Timer
 using time_point = std::chrono::time_point<std::chrono::high_resolution_clock>;
 
+inline double GetTimerMS(time_point t1, time_point t2);
+
+inline double GetTimerUS(time_point t1, time_point t2);
+
 class Timer {
   private:
     time_point st;   // start time point;
@@ -155,11 +159,11 @@ class Timer {
     double StopMS();
 
     double StopUS();
+
+    double GetRelativeTime();
+
+    double GetAbstractTime();
 };
-
-inline double GetTimerMS(time_point t1, time_point t2);
-
-inline double GetTimerUS(time_point t1, time_point t2);
 
 // Simpele std::Any in c++17
 class PlaceHolder {
