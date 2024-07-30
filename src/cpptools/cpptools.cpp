@@ -19,7 +19,8 @@ void PrintInfo(std::string str, INFO_TYPE info_type) {
 }
 
 std::time_t GetNowTime() {
-    return std::chrono::system_clock::to_time_t(std::chrono::high_resolution_clock::now());
+    // return std::chrono::system_clock::to_time_t(std::chrono::high_resolution_clock::now());
+    return std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 }
 
 std::string ConvertTime2Str(std::time_t tm, bool hasyear) {
