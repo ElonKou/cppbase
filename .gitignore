@@ -1,4 +1,15 @@
+# editor configs
 .vscode
-test
+
+# compiled files
+**/test
+**/main
+
+# tmp files for compile
 **/*.so
 **/*.o
+**/*.E
+**/*.S
+
+# other files
+**/*.json
