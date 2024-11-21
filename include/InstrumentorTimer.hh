@@ -11,10 +11,14 @@
 #define PROFILE_SCOPE() PROFILE_WITH_NAME(__FUNCSIG__)
 #else
 #define PROFILE_SCOPE() PROFILE_WITH_NAME(__PRETTY_FUNCTION__)
+#define PROFILE_BEGIN() { PROFILE_WITH_NAME(__PRETTY_FUNCTION__)
+#define PROFILE_END() }
 #endif
 #else
 #define PROFILE_WITH_NAME(name)
 #define PROFILE_SCOPE()
+#define PROFILE_BEGIN()
+#define PROFILE_END()
 #endif
 
 #include <algorithm>
@@ -23,6 +27,7 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include <mutex>
 
 struct ProfileResult {
     std::string Name;       // profile name.

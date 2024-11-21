@@ -8,6 +8,8 @@
 
 #include "InstrumentorTimer.hh"
 
+#include <vector>
+
 int Fibonacci(int x) {
     std::string name = std::string("Fibonacci ") + std::to_string(x);
     PROFILE_WITH_NAME(name.c_str());
@@ -78,8 +80,25 @@ void RunBenchmarks() {
 }
 } // namespace Benchmark
 
+void SimWithTime() {
+    PROFILE_BEGIN();
+    std::vector<std::string> names;
+    for (size_t i = 0; i < 10000; i++) {
+        names.push_back(std::to_string(i) + "some");
+    }
+    PROFILE_END();
+
+    PROFILE_BEGIN();
+    std::vector<std::string> names2;
+    for (size_t i = 0; i < 10000; i++) {
+        names2.emplace_back(std::to_string(i) + "some");
+    }
+    PROFILE_END();
+}
+
 int main() {
     Instrumentor::BeginSession("Benchmark");
     Benchmark::RunBenchmarks();
+    SimWithTime();
     return 0;
 }
