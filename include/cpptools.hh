@@ -52,6 +52,13 @@
 #include <unistd.h>
 #include <vector>
 
+#include <boost/archive/iterators/base64_from_binary.hpp>
+#include <boost/archive/iterators/ostream_iterator.hpp>
+#include <boost/archive/iterators/transform_width.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
 // Random part
 #define RandomX(x) (rand() % x)
 
@@ -122,11 +129,32 @@ extern std::vector<std::string> COLORS;
 
 void PrintInfo(std::string str, INFO_TYPE info_type = INFO_TYPE::INFO);
 
-std::time_t GetNowTime();
-std::string ConvertTime2Str(std::time_t tm, bool hasyear = false);
+// UUID Generator, more complate methods can use
+inline std::string generate_uuid4() {
+    // 使用随机生成器生成UUID
+    boost::uuids::uuid uuid = boost::uuids::random_generator()();
+
+    // 转换为字符串并返回
+    auto str = boost::uuids::to_string(uuid);
+
+    // 8-4-4-4-12
+    // 550e8400-e29b-41d4-a716-446655440000
+    // 前8位： 时间戳的高位部分，表示UUID生成的粗略时间。
+    // 中间4位： 时间戳的低位部分，进一步细化时间。
+    // 中间4位： 时钟序列，用于同一毫秒内生成的多个UUID的区分。
+    // 中间4位： 版本号，标识UUID的生成方式。
+    // 最后12位： 随机或伪随机数，保证UUID的唯一性。
+
+    return str;
+}
+
+inline std::string generate_uuid4_12() {
+    boost::uuids::uuid uuid = boost::uuids::random_generator()();
+    auto               str  = boost::uuids::to_string(uuid);
+    return str.substr(24, 12); // 8-4-4-4-12
+}
 
 // File tools
-
 std::vector<std::string> GetFilePath(std::string path);
 std::vector<std::string> GetFiles(std::string dir, std::string pattern = "");
 std::vector<std::string> Split(const std::string& s, const std::string& seperator);
@@ -136,12 +164,12 @@ bool                     IsExist(std::string filename);               ///< Check
 bool                     CreateFodler(std::string foldername);        ///< Create folder.
 bool                     DeleteFolder(std::string foldername);        ///< Delete folder.
 
-// Timer
+// Timer and Tools
 using time_point = std::chrono::time_point<std::chrono::high_resolution_clock>;
-
 inline double GetTimerMS(time_point t1, time_point t2);
-
 inline double GetTimerUS(time_point t1, time_point t2);
+std::time_t   GetNowTime();
+std::string   ConvertTime2Str(std::time_t tm, bool hasyear = false);
 
 class Timer {
   private:
