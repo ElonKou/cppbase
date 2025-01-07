@@ -106,6 +106,120 @@ std::string ToString(const Type& str) {
     return ret;
 }
 
+#include <cassert>
+#include <cstring>
+#include <iostream>
+
+// ShortString
+template <size_t N>
+class ShortString {
+    static_assert(N >= 1, "N must be greater than or equal to 1");
+
+  protected:
+    char data[N] = {'\0'};
+
+  public:
+    // default constructor
+    ShortString() {
+        data[0] = '\0';
+    }
+
+    // copy constructor: with c style input
+    ShortString(char other) {
+        data[0] = other;
+        data[1] = '\0';
+    }
+
+    // copy constructor: with c style input
+    ShortString(const char* other) {
+        strncpy(data, other, N);
+        data[N - 1] = '\0';
+    }
+
+    // copy constructor
+    ShortString(const ShortString& other) {
+        strncpy(data, other.data, N);
+        data[N - 1] = '\0';
+    }
+
+    // copy constructor
+    ShortString(const std::string& other) {
+        size_t n = std::min(N, other.size() + 1);
+        strncpy(data, other.c_str(), n);
+        data[n - 1] = '\0';
+    }
+
+    // assign operator: for different ShortString
+    template <size_t M>
+    ShortString& operator=(const ShortString<M>& other) {
+        if ((void*)this != (void*)&other) {
+            if (N < M) {
+                strncpy(data, other.c_str(), N);
+                data[N - 1] = '\0';
+            } else {
+                strncpy(data, other.c_str(), M);
+                data[M - 1] = '\0';
+            }
+        }
+        return *this;
+    }
+
+    // assign operator: for std::string
+    ShortString& operator=(const std::string& other) {
+        size_t n = std::min(N, other.size() + 1);
+        strncpy(data, other.c_str(), n);
+        data[n - 1] = '\0';
+        return *this;
+    }
+
+    // assign operator: for c style string
+    ShortString& operator=(const char* other) {
+        size_t n = std::min(N, strlen(other));
+        strncpy(data, other, n);
+        data[n - 1] = '\0';
+        return *this;
+    }
+
+    // operator of index
+    char& operator[](size_t index) {
+        return data[index];
+    }
+
+    // operator of index
+    char& at(size_t index) {
+        assert(index < N && "Index out of bounds");
+        return data[index];
+    }
+
+    // get size of ShortString
+    size_t size() const {
+        return strlen(data);
+    }
+
+    // get capacity of ShortString
+    size_t capacity() const {
+        return N;
+    }
+
+    // get data pointer of c style
+    inline const char* c_str() const {
+        return data;
+    }
+
+    ~ShortString() {}
+
+    friend std::ostream& operator<<(std::ostream& os, const ShortString& str) {
+        os << str.data;
+        // os << str.data << "[" << N << "]";
+        return os;
+    }
+};
+
+using str8  = ShortString<8>;
+using str16 = ShortString<16>;
+using str32 = ShortString<32>;
+using str64 = ShortString<64>;
+
 // print color strings
 enum INFO_TYPE {
     SUCCEED, // GREEN

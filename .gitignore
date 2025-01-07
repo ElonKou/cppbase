@@ -4,6 +4,8 @@
 # compiled files
 **/test
 **/main
+**/Testing
+**/build
 
 # tmp files for compile
 **/*.so
