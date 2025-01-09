@@ -412,7 +412,7 @@ class Matrix {
         : rows(rows)
         , cols(cols) {
         AllocMem();
-        std::memcpy(data, data_ptr, rows * cols * sizeof(T));
+        std::memcpy((void*)data, (void*)data_ptr, rows * cols * sizeof(T));
     }
 
     Matrix(size_t rows, size_t cols, const std::vector<T>& vec_data)
@@ -420,14 +420,14 @@ class Matrix {
         , cols(cols) {
         AllocMem();
         size_t min_size = std::min(rows * cols, vec_data.size());
-        std::memcpy(data, vec_data.data(), min_size * sizeof(T)); // clmap might happened.
+        std::memcpy((void*)data, (void*)vec_data.data(), min_size * sizeof(T)); // clmap might happened.
     }
 
     Matrix(const Matrix& other)
         : rows(other.rows)
         , cols(other.cols) {
         AllocMem();
-        std::memcpy(data, other.data, rows * cols * sizeof(T)); // clmap when size dismatch.
+        std::memcpy((void*)data, (void*)other.data, rows * cols * sizeof(T)); // clmap when size dismatch.
     }
 
     ~Matrix() {
@@ -465,7 +465,7 @@ class Matrix {
             rows = other.rows;
             cols = other.cols;
             AllocMem();
-            std::memcpy(data, other.data, rows * cols * sizeof(T));
+            std::memcpy((void*)data, (void*)other.data, rows * cols * sizeof(T));
         }
         return *this;
     }
@@ -482,13 +482,13 @@ class Matrix {
 
     inline void SetData(T* data_ptr) {
         if (data != data_ptr) {
-            std::memcpy(data, data_ptr, rows * cols * sizeof(T));
+            std::memcpy((void*)data, (void*)data_ptr, rows * cols * sizeof(T));
         }
     }
 
     inline void SetData(const std::vector<T>& vec_data) {
         size_t min_size = std::min(rows * cols, vec_data.size());
-        std::memcpy(data, vec_data.data(), min_size * sizeof(T)); // clmap might happened.
+        std::memcpy((void*)data, (void*)vec_data.data(), min_size * sizeof(T)); // clmap might happened.
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Matrix& m) {
