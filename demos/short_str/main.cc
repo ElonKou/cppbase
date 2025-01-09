@@ -10,14 +10,12 @@
 
 #include "cpptools.hh"
 
-using namespace cpptools;
-
 TEST(Constructor, CreateTest) {
-    str8 str8_1;                                  // default constructor
-    str8 str8_2 = "ioiooioiooooo-";               // copy constructor: char *
-    str8 str8_3 = std::string(":sdasdasd:sdasd"); // copy constructor: std::string
-    str8 str8_4 = std::string(":");               // copy constructor: 1 size
-    str8 str8_5 = str8_2;                         // copy constructor: different type
+    cppt::str8 str8_1;                                  // default constructor
+    cppt::str8 str8_2 = "ioiooioiooooo-";               // copy constructor: char *
+    cppt::str8 str8_3 = std::string(":sdasdasd:sdasd"); // copy constructor: std::string
+    cppt::str8 str8_4 = std::string(":");               // copy constructor: 1 size
+    cppt::str8 str8_5 = str8_2;                         // copy constructor: different type
 
     EXPECT_STREQ("", str8_1.c_str());
     EXPECT_STREQ("ioiooio", str8_2.c_str());
@@ -27,9 +25,9 @@ TEST(Constructor, CreateTest) {
 };
 
 TEST(Constructor, MemblerTest) {
-    str8 str8_1;
-    str8 str8_2 = "ioiooioiooooo-";
-    str8 str8_3 = std::string(":sdasdasd:sdasd");
+    cppt::str8 str8_1;
+    cppt::str8 str8_2 = "ioiooioiooooo-";
+    cppt::str8 str8_3 = std::string(":sdasdasd:sdasd");
 
     EXPECT_EQ(0, str8_1.size());
     EXPECT_EQ(7, str8_2.size());
@@ -45,24 +43,24 @@ TEST(Constructor, MemblerTest) {
 };
 
 TEST(Constructor, AssignTest) {
-    str16 str16_1 = "sdasdasdasd-a-s-s--s-s---";
-    str16 str16_2 = str16_1;
-    str16 str16_3 = "s";
+    cppt::str16 str16_1 = "sdasdasdasd-a-s-s--s-s---";
+    cppt::str16 str16_2 = str16_1;
+    cppt::str16 str16_3 = "s";
 
     EXPECT_STREQ("sdasdasdasd-a-s", str16_1.c_str());
     EXPECT_STREQ("sdasdasdasd-a-s", str16_2.c_str());
     EXPECT_STREQ("s", str16_3.c_str());
 
-    str8 str8_4;
-    str8 str8_5 = 'v';
-    str8_4      = str16_1;
-    str16_3     = str8_5;
+    cppt::str8 str8_4;
+    cppt::str8 str8_5 = 'v';
+    str8_4            = str16_1;
+    str16_3           = str8_5;
     EXPECT_STREQ("sdasdas", str8_4.c_str());
     EXPECT_STREQ("v", str8_5.c_str());
     EXPECT_STREQ("v", str16_3.c_str());
 
-    str8  str8_6;
-    str16 str16_7 = "sss";
+    cppt::str8  str8_6;
+    cppt::str16 str16_7 = "sss";
 
     std::string xx = std::string("dsasda00sdadas000000000000");
     str8_6         = "dsasda00sdadas000000000000";

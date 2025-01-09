@@ -62,7 +62,7 @@
 // Random part
 #define RandomX(x) (rand() % x)
 
-namespace cpptools {
+namespace cppt {
 
 inline void SetRandomSeed(unsigned int seed) {
     srand(seed);
@@ -85,6 +85,7 @@ inline bool RandomBool() {
 inline int RandomInt(int range) {
     return RandomX(range);
 }
+
 inline float RandomFloat(float v = 1.0f) {
     return RandomInt(1000000) * v / 1000000;
 }
@@ -372,6 +373,137 @@ class Any {
     }
 };
 
-}; // namespace cpptools
+// Matrix
+template <typename T>
+class Matrix {
+  private:
+    T*     data;
+    size_t rows;
+    size_t cols;
+
+  protected:
+    void AllocMem() {
+        if (rows * cols != 0) {
+            try {
+                data = new T[rows * cols];
+            } catch (const std::bad_alloc& e) {
+                std::cerr << "Matrix: Memory allocation failed: " << e.what() << '\n';
+            }
+            std::memset((void*)data, 0, rows * cols * sizeof(T));
+        } else {
+            std::cout << "Items counts is zeno." << '\n';
+        }
+    }
+
+  public:
+    Matrix()
+        : data(nullptr)
+        , rows(0)
+        , cols(0) {
+    }
+
+    Matrix(size_t rows, size_t cols)
+        : rows(rows)
+        , cols(cols) {
+        AllocMem();
+    }
+
+    Matrix(size_t rows, size_t cols, T* data_ptr)
+        : rows(rows)
+        , cols(cols) {
+        AllocMem();
+        std::memcpy(data, data_ptr, rows * cols * sizeof(T));
+    }
+
+    Matrix(size_t rows, size_t cols, const std::vector<T>& vec_data)
+        : rows(rows)
+        , cols(cols) {
+        AllocMem();
+        size_t min_size = std::min(rows * cols, vec_data.size());
+        std::memcpy(data, vec_data.data(), min_size * sizeof(T)); // clmap might happened.
+    }
+
+    Matrix(const Matrix& other)
+        : rows(other.rows)
+        , cols(other.cols) {
+        AllocMem();
+        std::memcpy(data, other.data, rows * cols * sizeof(T)); // clmap when size dismatch.
+    }
+
+    ~Matrix() {
+        delete[] data;
+    }
+
+    // 1-D data
+    T& operator[](size_t index) {
+        if (index >= rows * cols) {
+            throw std::out_of_range("Matrix: Index out of range.");
+        }
+        return data[index];
+    }
+
+    // 2-D data for const.
+    const T& operator()(size_t row, size_t col) const {
+        if (row >= rows || col >= cols) {
+            throw std::out_of_range("Matrix: Index out of range.");
+        }
+        return data[row * cols + col];
+    }
+
+    // 2-D data
+    T& operator()(size_t row, size_t col) {
+        if (row >= rows || col >= cols) {
+            throw std::out_of_range("Matrix: Index out of range.");
+        }
+        return data[row * cols + col];
+    }
+
+    Matrix& operator=(const Matrix& other) {
+        if (this != &other) {
+            delete[] data;
+
+            rows = other.rows;
+            cols = other.cols;
+            AllocMem();
+            std::memcpy(data, other.data, rows * cols * sizeof(T));
+        }
+        return *this;
+    }
+
+    // Get rows
+    inline size_t GetRows() {
+        return rows;
+    }
+
+    // Get cols
+    inline size_t GetCols() {
+        return cols;
+    }
+
+    inline void SetData(T* data_ptr) {
+        if (data != data_ptr) {
+            std::memcpy(data, data_ptr, rows * cols * sizeof(T));
+        }
+    }
+
+    inline void SetData(const std::vector<T>& vec_data) {
+        size_t min_size = std::min(rows * cols, vec_data.size());
+        std::memcpy(data, vec_data.data(), min_size * sizeof(T)); // clmap might happened.
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Matrix& m) {
+        for (size_t i = 0; i < m.rows; i++) {
+            for (size_t j = 0; j < m.cols; j++) {
+                os << m(i, j) << " ";
+            }
+            if (i != (m.rows - 1)) {
+                os << std::endl;
+            }
+        }
+        return os;
+    }
+};
+
+}; // namespace cppt
 
 #endif

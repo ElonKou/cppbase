@@ -8,7 +8,7 @@
 
 #include "cpptools.hh"
 
-namespace cpptools {
+namespace cppt {
 
 // print information
 std::vector<std::string> COLORS = {GREEN, CYAN, BROWN, RED, RED, RED, GREEN, BLUE, BLACK, BROWN, YELLOW, PURPLE, CYAN, GRAY, WHITE};
@@ -218,4 +218,4 @@ double Timer::GetAbstractTime() {
     return milliseconds_since_epoch;
 }
 
-} // namespace cpptools
+} // namespace cppt
