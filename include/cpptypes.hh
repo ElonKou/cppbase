@@ -1,6 +1,6 @@
 /*================================================================
 *  Copyright (C)2022 All rights reserved.
-*  FileName : cpptypes.hh
+*  FileName : cppt.hh
 *  Author   : elonkou
 *  Email    : elonkou@ktime.cc
 *  Version  : 1.13
@@ -17,7 +17,7 @@
 #include <iostream>
 #include <ostream>
 
-namespace cpptypes {
+namespace cppt {
 
 /**
  * @brief vec2 simple 2d vector.
@@ -783,6 +783,6 @@ typedef mat3<unsigned int>  Mat3ui;
 typedef mat3<float>         Mat3f;
 typedef mat3<double>        Mat3d;
 
-} // namespace cpptypes
+} // namespace cppt
 
 #endif
