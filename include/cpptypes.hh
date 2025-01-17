@@ -49,6 +49,11 @@ union vec2 {
         , y(0) {}
 
     // with input data constructor.
+    vec2(T v_)
+        : x(v_)
+        , y(v_) {}
+
+    // with input data constructor.
     vec2(T x_, T y_)
         : x(x_)
         , y(y_) {}
@@ -177,6 +182,12 @@ union vec3 {
         : x(0)
         , y(0)
         , z(0) {}
+
+    // with input data constructor.
+    vec3(T v_)
+        : x(v_)
+        , y(v_)
+        , z(v_) {}
 
     // with input data constructor.
     vec3(T x_, T y_, T z_)
@@ -327,6 +338,13 @@ union vec4 {
         , y(y_)
         , z(z_)
         , t(t_) {}
+
+    // with input data constructor.
+    vec4(T v_)
+        : x(v_)
+        , y(v_)
+        , z(v_)
+        , t(v_) {}
 
     // Other type cnstructor.
     template <typename Tp>
