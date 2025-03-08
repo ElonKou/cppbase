@@ -504,6 +504,6 @@ class Matrix {
     }
 };
 
-}; // namespace cppt
+} // namespace cppt
 
 #endif
