@@ -222,7 +222,7 @@ using str32 = ShortString<32>;
 using str64 = ShortString<64>;
 
 // print color strings
-enum INFO_TYPE {
+enum INFO_TYPE : size_t {
     SUCCEED, // GREEN
     INFO,    // BLACK
     WARNING, // BROWN
@@ -240,7 +240,12 @@ enum INFO_TYPE {
     COLOR_WHITE
 };
 
-extern std::vector<std::string> COLORS;
+// extern std::vector<std::string> COLORS; // cause memory leaky for twice free
+inline std::string GetColors(INFO_TYPE type) {
+    static std::vector<std::string> COLORS = {
+        GREEN, CYAN, BROWN, RED, RED, RED, GREEN, BLUE, BLACK, BROWN, YELLOW, PURPLE, CYAN, GRAY, WHITE};
+    return COLORS[type];
+}
 
 void PrintInfo(std::string str, INFO_TYPE info_type = INFO_TYPE::INFO);
 

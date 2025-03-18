@@ -11,10 +11,9 @@
 namespace cppt {
 
 // print information
-std::vector<std::string> COLORS = {GREEN, CYAN, BROWN, RED, RED, RED, GREEN, BLUE, BLACK, BROWN, YELLOW, PURPLE, CYAN, GRAY, WHITE};
 
 void PrintInfo(std::string str, INFO_TYPE info_type) {
-    std::string s = COLORS[size_t(info_type)] + str + NONEC;
+    std::string s = GetColors(info_type) + str + NONEC;
     printf("%s", s.c_str());
 }
 
