@@ -279,7 +279,7 @@ inline std::string generate_uuid4_12() {
 std::vector<std::string> GetFilePath(std::string path);
 std::vector<std::string> GetFiles(std::string dir, std::string pattern = "");
 std::vector<std::string> Split(const std::string& s, const std::string& seperator);
-std::string&             Replace_all(std::string& str, const std::string& old_value, const std::string& new_value);
+std::string              Replace_all(const std::string& str, const std::string& old_value, const std::string& new_value);
 std::string              CombinePath(std::vector<std::string> paths); ///< combine sub-path into path.
 bool                     IsExist(std::string filename);               ///< Check folder exist.
 bool                     CreateFodler(std::string foldername);        ///< Create folder.

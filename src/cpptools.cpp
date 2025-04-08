@@ -112,15 +112,16 @@ std::vector<std::string> Split(const std::string& s, const std::string& seperato
     return result;
 }
 
-std::string& Replace_all(std::string& str, const std::string& old_value, const std::string& new_value) {
+std::string Replace_all(const std::string& str, const std::string& old_value, const std::string& new_value) {
+    std::string  str_tmp = str;
     while (true) {
         std::string::size_type pos(0);
-        if ((pos = str.find(old_value)) != std::string::npos)
-            str.replace(pos, new_value.length(), new_value);
+        if ((pos = str_tmp.find(old_value)) != std::string::npos)
+            str_tmp.replace(pos, new_value.length(), new_value);
         else
             break;
     }
-    return str;
+    return str_tmp;
 }
 
 std::string CombinePath(std::vector<std::string> paths) {
