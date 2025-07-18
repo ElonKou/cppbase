@@ -36,7 +36,7 @@ std::string ConvertTime2Str(std::time_t tm, bool hasyear) {
 // File tools
 
 // example : "/home/biulab/app/TENCENT_EXP/qikan_cache/joint.json"
-std::vector<std::string> GetFilePath(std::string path) {
+std::vector<std::string> SeperateFilePath(const std::string& path) {
     size_t      ipos_root = path.find_last_of('/');
     size_t      ipos_sub  = path.find_last_of('.');
     std::string path_root = path.substr(0, ipos_root);                                 // folder     : "/home/biulab/app/TENCENT_EXP/qikan_cache"
@@ -46,37 +46,64 @@ std::vector<std::string> GetFilePath(std::string path) {
     return {path_root, path_pat, path_name, path_sub};
 }
 
-std::vector<std::string> GetFiles(std::string dir, std::string pattern) {
+std::vector<std::string> GetAllFiles(const std::string& dir, const std::string& pattern) {
+    namespace fs = std::filesystem;
     std::vector<std::string> files;
-    DIR*                     dp = opendir(dir.c_str());
-    struct dirent*           dirp;
-    while ((dirp = readdir(dp)) != NULL) {
-        if (std::string(dirp->d_name) == "." || std::string(dirp->d_name) == "..") {
-            continue;
-        }
-        bool        ret = true;
-        std::string tmp = std::string(dirp->d_name);
-        if (pattern.size() > 0) {
-            if (tmp.size() < pattern.size()) {
-                continue;
-            }
-            for (size_t i = 0; i < pattern.size(); i++) {
-                size_t idx = pattern.size() - 1 - i;
-                size_t idy = tmp.size() - 1 - i;
-                if (tmp[idy] != pattern[idx]) {
-                    ret = false;
-                    break;
-                }
-            }
-            if (!ret) {
-                continue;
+    if (!fs::exists(dir) || !fs::is_directory(dir))
+        return files;
+
+    for (const auto& entry : fs::directory_iterator(dir)) {
+        if (entry.is_regular_file()) {
+            const std::string name = entry.path().filename().string();
+            if (pattern.empty() || (name.size() >= pattern.size() && name.compare(name.size() - pattern.size(), pattern.size(), pattern) == 0)) {
+                // files.push_back(name); // store only file name
+                files.push_back(entry.path().string()); // store full path
             }
         }
-        files.push_back(tmp);
     }
-    closedir(dp);
     return files;
 }
+
+std::vector<std::string> GetAllFiles(const std::vector<std::string>& dirs, const std::string& pattern) {
+    std::vector<std::string> all_files;
+    for (const auto& dir : dirs) {
+        auto files = GetAllFiles(dir, pattern);
+        all_files.insert(all_files.end(), files.begin(), files.end());
+    }
+    return all_files;
+}
+
+// std::vector<std::string> GetAllFiles(const std::string& dir, const std::string& pattern) {
+//     std::vector<std::string> files;
+//     DIR*                     dp = opendir(dir.c_str());
+//     struct dirent*           dirp;
+//     while ((dirp = readdir(dp)) != NULL) {
+//         if (std::string(dirp->d_name) == "." || std::string(dirp->d_name) == "..") {
+//             continue;
+//         }
+//         bool        ret = true;
+//         std::string tmp = std::string(dirp->d_name);
+//         if (pattern.size() > 0) {
+//             if (tmp.size() < pattern.size()) {
+//                 continue;
+//             }
+//             for (size_t i = 0; i < pattern.size(); i++) {
+//                 size_t idx = pattern.size() - 1 - i;
+//                 size_t idy = tmp.size() - 1 - i;
+//                 if (tmp[idy] != pattern[idx]) {
+//                     ret = false;
+//                     break;
+//                 }
+//             }
+//             if (!ret) {
+//                 continue;
+//             }
+//         }
+//         files.push_back(tmp);
+//     }
+//     closedir(dp);
+//     return files;
+// }
 
 std::vector<std::string> Split(const std::string& s, const std::string& seperator) {
     std::vector<std::string> result;
@@ -113,7 +140,7 @@ std::vector<std::string> Split(const std::string& s, const std::string& seperato
 }
 
 std::string Replace_all(const std::string& str, const std::string& old_value, const std::string& new_value) {
-    std::string  str_tmp = str;
+    std::string str_tmp = str;
     while (true) {
         std::string::size_type pos(0);
         if ((pos = str_tmp.find(old_value)) != std::string::npos)
@@ -124,31 +151,116 @@ std::string Replace_all(const std::string& str, const std::string& old_value, co
     return str_tmp;
 }
 
-std::string CombinePath(std::vector<std::string> paths) {
-    std::string ret = "";
-    for (size_t i = 0; i < paths.size(); i++) {
-        if (i != 0) {
-            if (paths[i][0] == '/') {
-                paths[i] = paths[i].substr(1, paths[i].size() - 1);
-            }
-        }
-        if (paths[i][paths[i].size() - 1] == '/') {
-            paths[i] = paths[i].substr(0, paths[i].size() - 1);
-        }
-        if (i == 0) {
-            ret = paths[i];
-        } else {
-            ret = ret + "/" + paths[i];
-        }
+std::string CombinePath(const std::vector<std::string>& paths) {
+    namespace fs = std::filesystem;
+    fs::path combined;
+    for (const auto& p : paths) {
+        combined /= p; // auto combine '/' target
     }
-    return ret;
+    return combined.string(); // return std::string types
 }
 
-bool IsExist(std::string filename) {
+std::string GetResourcePath(const std::string& res_folder, const std::string& res_type, const std::string& filename,
+                            const std::string& dataset, bool ischeck) {
+    namespace fs = std::filesystem;
+    fs::path              base(res_folder);
+    std::vector<fs::path> search_paths;
+
+    if (dataset == "default") {
+        // 1.add all private_* paths
+        for (const auto& entry : fs::directory_iterator(base)) {
+            if (entry.is_directory()) {
+                const auto name = entry.path().filename().string();
+                if (name.find("private_") == 0) {
+                    if (filename.empty()) {
+                        search_paths.emplace_back(entry.path() / dataset / "data" / res_type);
+                    } else {
+                        search_paths.emplace_back(entry.path() / dataset / "data" / res_type / filename);
+                    }
+                }
+            }
+        }
+        // 2. add public path
+        if (filename.empty()) {
+            search_paths.emplace_back(base / res_type);
+        } else {
+            search_paths.emplace_back(base / res_type / filename);
+        }
+    } else if (dataset == "public") {
+        // check public path
+        if (filename.empty()) {
+            search_paths.emplace_back(base / res_type);
+        } else {
+            search_paths.emplace_back(base / res_type / filename);
+        }
+    } else {
+        // check private path
+        if (filename.empty()) {
+            search_paths.emplace_back(base / dataset / "data" / res_type);
+        } else {
+            search_paths.emplace_back(base / dataset / "data" / res_type / filename);
+        }
+    }
+
+    if (!ischeck) {
+        return search_paths.empty() ? "" : search_paths.front().string();
+    }
+
+    // chech whether the file exists in the search paths
+    for (const auto& path : search_paths) {
+        if (fs::exists(path)) {
+            return path.string();
+        }
+    }
+
+    return ""; // Not found
+}
+
+std::vector<std::string> GetResourceFolders(const std::string& res_folder, const std::string& res_type, const std::string& dataset, bool ischeck) {
+    namespace fs = std::filesystem;
+    fs::path                 base(res_folder);
+    std::vector<std::string> result;
+
+    if (dataset == "default") {
+        // find all private_* folders
+        for (const auto& entry : fs::directory_iterator(base)) {
+            if (entry.is_directory()) {
+                const std::string name = entry.path().filename().string();
+                if (name.find("private_") == 0) {
+                    fs::path target = entry.path() / res_type;
+                    if (!ischeck || fs::exists(target)) {
+                        result.push_back(target.string());
+                    }
+                }
+            }
+        }
+        // find public folder
+        fs::path public_path = base / res_type;
+        if (!ischeck || fs::exists(public_path)) {
+            result.push_back(public_path.string());
+        }
+    } else if (dataset == "public") {
+        // only add public folders
+        fs::path public_path = base / res_type;
+        if (!ischeck || fs::exists(public_path)) {
+            result.push_back(public_path.string());
+        }
+    } else {
+        // find specific dataset folder
+        fs::path private_path = base / dataset / res_type;
+        if (!ischeck || fs::exists(private_path)) {
+            result.push_back(private_path.string());
+        }
+    }
+
+    return result;
+}
+
+bool IsExist(const std::string& filename) {
     int ret = access(filename.c_str(), 0);
     return ret == 0;
 }
-bool CreateFodler(std::string foldername) {
+bool CreateFodler(const std::string& foldername) {
     if (!IsExist(foldername)) {
         std::string cmd = "mkdir -p " + foldername;
         int         ret = system(cmd.c_str());
@@ -158,7 +270,7 @@ bool CreateFodler(std::string foldername) {
     }
 }
 
-bool DeleteFolder(std::string foldername) {
+bool DeleteFolder(const std::string& foldername) {
     if (IsExist(foldername)) {
         std::string cmd = "rm -rf " + foldername;
         int         ret = system(cmd.c_str());

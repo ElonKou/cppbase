@@ -38,9 +38,10 @@ class Reflector {
     }
 
     static std::shared_ptr<Reflector> Instance() {
-        if (ptr == nullptr) {
-            ptr.reset(new Reflector());
-        }
+        // if (ptr == nullptr) {
+        //     ptr.reset(new Reflector());
+        // }
+        ptr = std::make_shared<Reflector>();
 
         return ptr;
     }

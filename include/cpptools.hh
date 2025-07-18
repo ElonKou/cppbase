@@ -45,6 +45,7 @@
 
 #include <chrono>
 #include <dirent.h>
+#include <filesystem>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -276,14 +277,23 @@ inline std::string generate_uuid4_12() {
 }
 
 // File tools
-std::vector<std::string> GetFilePath(std::string path);
-std::vector<std::string> GetFiles(std::string dir, std::string pattern = "");
+std::vector<std::string> SeperateFilePath(const std::string& path);          ///< seperate path into folder, file_path, file_name and sub_name.
+std::string              CombinePath(const std::vector<std::string>& paths); ///< combine sub-path into path.
+
+// dataset: public or private, default is get all files.
+std::string              GetResourcePath(const std::string& res_folder, const std::string& res_type, const std::string& filename,
+                                         const std::string& dataset = "default", bool ischeck = false); ///< Get resource path, res_type is "config", "model", "texture", "shader", etc.
+std::vector<std::string> GetResourceFolders(const std::string& res_folder, const std::string& res_type,
+                                            const std::string& dataset = "default", bool ischeck = false); ///< Get all resource folders, res_type is "config", "model", "texture", "shader", etc.
+
+std::vector<std::string> GetAllFiles(const std::string& dir, const std::string& pattern = "");
+std::vector<std::string> GetAllFiles(const std::vector<std::string>& dirs, const std::string& pattern = "");
 std::vector<std::string> Split(const std::string& s, const std::string& seperator);
 std::string              Replace_all(const std::string& str, const std::string& old_value, const std::string& new_value);
-std::string              CombinePath(std::vector<std::string> paths); ///< combine sub-path into path.
-bool                     IsExist(std::string filename);               ///< Check folder exist.
-bool                     CreateFodler(std::string foldername);        ///< Create folder.
-bool                     DeleteFolder(std::string foldername);        ///< Delete folder.
+
+bool IsExist(const std::string& filename);        ///< Check folder exist.
+bool CreateFodler(const std::string& foldername); ///< Create folder.
+bool DeleteFolder(const std::string& foldername); ///< Delete folder.
 
 // Timer and Tools
 using time_point = std::chrono::time_point<std::chrono::high_resolution_clock>;
