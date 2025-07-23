@@ -279,13 +279,6 @@ inline std::string generate_uuid4_12() {
 // File tools
 std::vector<std::string> SeperateFilePath(const std::string& path);          ///< seperate path into folder, file_path, file_name and sub_name.
 std::string              CombinePath(const std::vector<std::string>& paths); ///< combine sub-path into path.
-
-// dataset: public or private, default is get all files.
-std::string              GetResourcePath(const std::string& res_folder, const std::string& res_type, const std::string& filename,
-                                         const std::string& dataset = "default", bool ischeck = false); ///< Get resource path, res_type is "config", "model", "texture", "shader", etc.
-std::vector<std::string> GetResourceFolders(const std::string& res_folder, const std::string& res_type,
-                                            const std::string& dataset = "default", bool ischeck = false); ///< Get all resource folders, res_type is "config", "model", "texture", "shader", etc.
-
 std::vector<std::string> GetAllFiles(const std::string& dir, const std::string& pattern = "");
 std::vector<std::string> GetAllFiles(const std::vector<std::string>& dirs, const std::string& pattern = "");
 std::vector<std::string> Split(const std::string& s, const std::string& seperator);
